@@ -1,0 +1,191 @@
+11.Container With Most Water-
+def maxArea(height):
+    max_area = 0
+    left = 0
+    right = len(height) - 1
+    while left < right:
+        area = (right - left) * min(height[left], height[right])
+        max_area = max(max_area, area)
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return max_area
+
+12. Integer to Roman -
+def int_to_roman(num):
+    val = [
+        1000, 900, 500, 400,
+        100, 90, 50, 40,
+        10, 9, 5, 4,
+        1
+        ]
+    syb = [
+        "M", "CM", "D", "CD",
+        "C", "XC", "L", "XL",
+        "X", "IX", "V", "IV",
+        "I"
+        ]
+    roman_num = ''
+    i = 0
+    while num > 0:
+        for _ in range(num // val[i]):
+            roman_num += syb[i]
+            num -= val[i]
+        i += 1
+    return roman_num
+
+13.Roman to Integer-
+def roman_to_int(s):
+    roman_values = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000
+    }
+    result = 0
+    prev_value = 0
+    for char in s[::-1]:
+        value = roman_values[char]
+        if value < prev_value:
+            result -= value
+        else:
+            result += value
+        prev_value = value
+    return result
+
+14. Longest Common Prefix -
+def longest_common_prefix(strs):
+    if not strs:
+        return ""
+    prefix = strs[0]
+    for s in strs[1:]:
+        while not s.startswith(prefix):
+            prefix = prefix[:-1]
+            if not prefix:
+                return ""
+    return prefix
+
+15.3SUM-
+def threeSum(nums):
+    nums.sort()
+    result = []
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total < 0:
+                left += 1
+            elif total > 0:
+                right -= 1
+            else:
+                result.append([nums[i], nums[left], nums[right]])
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+                left += 1
+                right -= 1
+    return result
+
+16.3Sum Closest -
+def threeSumClosest(nums, target):
+    nums.sort()
+    closest_sum = float('inf')
+    for i in range(len(nums) - 2):
+        left, right = i + 1, len(nums) - 1
+        while left < right:
+            total = nums[i] + nums[left] + nums[right]
+            if total == target:
+                return total
+            if abs(total - target) < abs(closest_sum - target):
+                closest_sum = total
+            if total < target:
+                left += 1
+            else:
+                right -= 1
+    return closest_sum
+
+17. Letter Combinations of a Phone Number-
+def letterCombinations(digits):
+    if not digits:
+        return []
+    phone = {'2': ['a', 'b', 'c'],
+             '3': ['d', 'e', 'f'],
+             '4': ['g', 'h', 'i'],
+             '5': ['j', 'k', 'l'],
+             '6': ['m', 'n', 'o'],
+             '7': ['p', 'q', 'r', 's'],
+             '8': ['t', 'u', 'v'],
+             '9': ['w', 'x', 'y', 'z']}
+
+    def backtrack(combination, next_digits):
+        if len(next_digits) == 0:
+            output.append(combination)
+        else:
+            for letter in phone[next_digits[0]]:
+                backtrack(combination + letter, next_digits[1:])
+    output = []
+    backtrack("", digits)
+    return output
+
+18. 4Sum -
+def fourSum(nums, target):
+    nums.sort()
+    n = len(nums)
+    result = []
+    for a in range(n - 3):
+        if a > 0 and nums[a] == nums[a - 1]:
+            continue
+        for b in range(a + 1, n - 2):
+            if b > a + 1 and nums[b] == nums[b - 1]:
+                continue
+            c, d = b + 1, n - 1
+            while c < d:
+                total = nums[a] + nums[b] + nums[c] + nums[d]
+                if total == target:
+                    result.append([nums[a], nums[b], nums[c], nums[d]]
+                    while c < d and nums[c] == nums[c + 1]:
+                        c += 1
+                    while c < d and nums[d] == nums[d - 1]:
+                        d -= 1
+                    c += 1
+                    d -= 1
+                elif total < target:
+                    c += 1
+                else:
+                    d -= 1
+     return result
+
+19.Remove Nth Node From End of List -
+class Solution:
+    def removeNthFromEnd(self, head, n):
+        dummy = ListNode(0)
+        dummy.next = head
+        first = dummy
+        second = dummy
+        for i in range(n + 1):
+            first = first.next
+        while first:
+            first = first.next
+            second = second.next
+        second.next = second.next.next
+        return dummy.next
+
+20.Valid Parentheses-
+def isValid(s):
+    stack = []
+    mapping = {")": "(", "}": "{", "]": "["}
+
+    for char in s:
+        if char in mapping.values():
+            stack.append(char)
+        elif char in mapping:
+            if not stack or mapping[char] != stack.pop():
+                return False
+        return not stack
