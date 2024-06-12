@@ -1,0 +1,242 @@
+1.remove element
+Algorithm
+*Initialize Index:Initialize i to 0.
+*Remove Elements:Iterate through the array.
+*If the current element is not equal to val, move it to the front of the array by incrementing i and copying the element to nums[i].
+*Return Index:Return i as the new length of the array after removing all occurrences of val.
+CODE:
+nums = [3,2,2,3]
+val = 3
+k = Solution().removeElement(nums, val)
+print(k)
+print(nums)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.Sudoku Solver
+Algorithm
+*Initialize Board:Initialize the Sudoku board with the given input.
+*Find Empty Cells:Find all empty cells in the board.
+*For each empty cell:Check all possible numbers from 1 to 9.
+*If a number is valid (i.e., it does not appear in the same row, column, or 3x3 box), fill the cell with that number.
+*Backtrack:If no valid number is found for an empty cell, backtrack and try another number.
+*Return Solution:If all cells are filled, return the solved board.
+CODE:
+class Solution:
+    def solveSudoku(self, board):
+        def is_valid(board, row, col, num):
+            for i in range(9):
+                if board[row][i] == str(num):
+                    return False
+            for i in range(9):
+                if board[i][col] == str(num):
+                    return False
+            start_row, start_col = row - row % 3, col - col % 3
+            for i in range(3):
+                for j in range(3):
+                    if board[i + start_row][j + start_col] == str(num):
+                        return False
+            return True
+        def solve(board):
+            for i in range(9):
+                for j in range(9):
+                    if board[i][j] == '.':
+                        for num in range(1, 10):
+                            if is_valid(board, i, j, num):
+                                board[i][j] = str(num)
+                                if solve(board):
+                                    return True
+                                board[i][j] = '.'
+                        return False
+            return True
+        if not solve(board):
+            return False
+        return board
+-------------------------------------------------------------------------------------------------------------------------------------------------
+3.COUNT AND SAY
+Algorithm
+*Base Case:If n is 1, return "1".
+*Initialize Variables:Initialize an empty string result to store the count-and-say sequence.
+*Initialize variables count and digit to keep track of the count and the current digit.
+*Iterate through the Previous Sequence:Iterate through the previous sequence (obtained from countAndSay(n-1)).
+*For each digit:If the current digit is the same as the previous digit, increment count.
+*If the current digit is different from the previous digit or if it's the last digit, append the count and the previous digit to result, reset count to 1, and update digit to the current digit.
+*Return the Result:Return the final result string.
+CODE:
+class Solution:
+    def countAndSay(self, n: int) -> str:
+        if n == 1:
+            return "1"
+        prev_sequence = self.countAndSay(n - 1)
+        result = ""
+        count = 1
+        digit = prev_sequence[0]
+        for i in range(1, len(prev_sequence) + 1):
+            if i < len(prev_sequence) and prev_sequence[i] == digit:
+                count += 1
+            else:
+                result += str(count) + digit
+                count = 1
+                if i < len(prev_sequence):
+                    digit = prev_sequence[i]
+        return result
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.COMBINATION SUM
+Algorithm
+*If target is 0, return an empty list.
+*Initialize an empty list result to store the combinations.
+*Initialize a variable current_sum to keep track of the current sum.
+*Define a recursive function backtrack that takes current_sum, target, and index as arguments.
+*If current_sum equals target, add the current combination to result and return.
+*If current_sum exceeds target, return.
+*For each candidate starting from index, add it to current_sum and recursively call backtrack with the updated current_sum and index.
+*Remove the last added candidate from current_sum and return.Return Result
+CODE:
+class Solution:
+    def combinationSum(self, candidates, target):
+        def backtrack(current_sum, target, index):
+            if current_sum == target:
+                result.append(current_sum)
+                return
+            if current_sum > target:
+                return
+            for i in range(index, len(candidates)):
+                backtrack(current_sum + candidates[i], target, i)
+        result = []
+        backtrack(0, target, 0)
+        return result
+  -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+  5.COMBINATION SUM II
+  Algorithm
+*Sort the candidates array in ascending order.
+*Initialize an empty list result to store the combinations.
+*Initialize a variable curr_combination to store the current combination.
+*Initialize a variable remaining_nums to store the remaining numbers to consider.
+*Initialize a variable target_sum to store the remaining sum.
+*Define a recursive function backtrack that takes curr_combination, remaining_nums, and target_sum as arguments.
+*If target_sum is 0, add curr_combination to result and return.
+*If the number is larger than target_sum, break the loop.
+*If the number is the same as the previous number, skip it.
+*Add the number to curr_combination and recursively call backtrack with the updated curr_combination, remaining_nums[i+1:], and target_sum - num.
+*Remove the last added number from curr_combination.Return result.
+CODE:
+candidates = [10,1,2,7,6,1,5]
+target = 8
+print(Solution().combinationSum2(candidates, target))
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1.Algorithm:
+Initialize a list nums with the digits from 1 to n as strings.
+Subtract 1 from k to convert it to 0-based indexing.
+Define a helper function factorial(n) to calculate the factorial of a given number.
+Initialize an empty list result to store the permutation.
+Iterate n times:
+Calculate the index idx by dividing k by the factorial of n-i-1.
+Append the digit at index idx from nums to result.
+Remove the selected digit from nums.
+Update k by subtracting idx * factorial(n-i-1).
+Return the permutation as a string by joining the elements in result.
+def getPermutation(n, k):
+    nums = [str(i) for i in range(1, n+1)]
+    k -= 1  # Convert to 0-based indexing
+    def factorial(n):
+        if n == 0:
+            return 1
+        return n * factorial(n-1)
+    result = []
+    for i in range(n):
+        idx = k // factorial(n-i-1)
+        result.append(nums.pop(idx))
+        k -= idx * factorial(n-i-1)
+    return ''.join(result)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   2.Algorithm
+Initialize max_sum and current_sum to the first element of the array.
+Iterate through the array starting from the second element:
+Update current_sum to be the maximum of the current element and the sum of the current element and the previous current_sum.
+Update max_sum to be the maximum of max_sum and current_sum.
+Return max_sum as the maximum subarray sum.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.PERMITATION II
+Algorithm
+*Sort the input list nums to handle duplicates.
+*nums: the input list of numbers
+*path: the current permutation being built
+*used: a list to track which elements have been used
+*res: the list to store all unique permutations
+*If the length of path is equal to the length of nums, append a copy of path to res and return.
+*If the current element has been used, skip it.
+*If the current element is a duplicate of the previous element and the previous element has not been used, skip it (to avoid duplicates).
+*Mark the current element as used by setting used[i] to True.
+*Append the current element to path.
+*Recursively call backtrack with the updated path and used.
+*Remove the current element from path and mark it as unused by setting used[i] to False.
+*Before calling backtrack, sort nums to handle duplicates.
+*Initialize used to keep track of used elements and res to store the unique permutations.
+*Call backtrack with the initial parameters and return res.
+CODE:
+from collections import Counter
+def permuteUnique(nums):
+    def backtrack(nums, path, used, res):
+        if len(path) == len(nums):
+            res.append(path[:])
+            return
+        for i in range(len(nums)):
+            if used[i]:
+                continue
+            if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack(nums, path, used, res)
+            used[i] = False
+            path.pop()
+    nums.sort()
+    used = [False] * len(nums)
+    res = []
+    backtrack(nums, [], used, res)
+    return res
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------
+    7.MAXIMUM SUBARRAY
+    Algorithm
+*Initialize max_sum and current_sum to the first element of the array.
+*Iterate through the array starting from the second element:
+*Update current_sum to be the maximum of the current element and the sum of the current element and the previous current_sum.
+*Update max_sum to be the maximum of max_sum and current_sum.
+*Return max_sum as the maximum subarray sum.
+CODE:
+def maxSubArray(nums):
+    if not nums:
+        return 0
+    max_sum = current_sum = nums[0]
+    for num in nums[1:]:
+        current_sum = max(num, current_sum + num)
+        max_sum = max(max_sum, current_sum)
+    return max_sum
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.PERMUTATION SEQUENCE
+Algorithm:
+*Initialize a list nums with the digits from 1 to n as strings.
+*Subtract 1 from k to convert it to 0-based indexing.
+*Define a helper function factorial(n) to calculate the factorial of a given number.
+*Initialize an empty list result to store the permutation.
+*Iterate n times:
+*Calculate the index idx by dividing k by the factorial of n-i-1.
+*Append the digit at index idx from nums to result.
+*Remove the selected digit from nums.
+*Update k by subtracting idx * factorial(n-i-1).
+*Return the permutation as a string by joining the elements in result.
+CODE:
+def getPermutation(n, k):
+    nums = [str(i) for i in range(1, n+1)]
+    k -= 1  # Convert to 0-based indexing
+    def factorial(n):
+        if n == 0:
+            return 1
+        return n * factorial(n-1)
+    result = []
+    for i in range(n):
+        idx = k // factorial(n-i-1)
+        result.append(nums.pop(idx))
+        k -= idx * factorial(n-i-1)
+    return ''.join(result)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
