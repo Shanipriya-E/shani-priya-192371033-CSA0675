@@ -1,0 +1,139 @@
+1.
+Algorithm:
+-start the program.
+-This function takes an array nums as input and returns the minimum length of the array after applying the operation zero or more times. 
+-It uses two pointers, left and right, to track the indices of the array. 
+-The operation is applied by moving the pointers towards each other until they meet, and the length of the remaining array is calculated as right - left + 1.
+-stop the program after printing output.
+code:
+1st questiondef minLength(nums):
+    if not nums:
+        return 0
+
+    left, right = 0, len(nums) - 1
+    while left < right:
+        if nums[left] < nums[right]:
+            left += 1
+        else:
+            right -= 1
+    return right - left + 1
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.
+Algorithm:
+-TreeNode class: Defines a basic structure for a node in a binary tree with attributes val, left, and right.
+-sortedArrayToBST(nums) function:
+-Takes a sorted integer array nums as input.
+-If nums is empty (not nums), returns None.
+-Finds the middle index mid of the array nums.
+-Creates a new TreeNode with the value nums[mid], which becomes the root of the subtree.
+-Recursively constructs the left subtree (root.left) using the left part of nums (nums[:mid]).
+-Recursively constructs the right subtree (root.right) using the right part of nums (nums[mid+1:]).
+-Returns root, which represents the root of the BST.
+-inorderTraversal(root) function:
+-Performs an inorder traversal of the BST rooted at root (left subtree, root, right subtree).
+-Prints each node's value in the BST in sorted order.
+code:
+class TreeNode:
+    def init(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+def sortedArrayToBST(nums):
+    if not nums:
+        return None
+    mid = len(nums) // 2
+    root = TreeNode(nums[mid])
+    root.left = sortedArrayToBST(nums[:mid])
+    root.right = sortedArrayToBST(nums[mid+1:])
+    return root
+def inorderTraversal(root):
+    if root:
+        inorderTraversal(root.left)
+        print(root.val, end=" ")
+        inorderTraversal(root.right)
+if name == "main":
+    nums = [-10, -3, 0, 5, 9]
+    root = sortedArrayToBST(nums)
+    print("Inorder traversal of the BST:")
+    inorderTraversal(root)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.
+Algorithm:
+1. Initialize a result set: Use a set to store the substrings to avoid duplicates.
+2. Nested Loop: Iterate over each word in the array with an outer loop, and check if it is a substring of any other word using an inner loop.
+3. Substring Check: If the word is found to be a substring of another word, add it to the result set.
+4. Convert to List: Convert the result set to a list and return it.Result Set:
+5.Initialize an empty set to store substrings found.
+6. Outer Loop: Iterate over each word with index i.
+7. Inner Loop: For each word words[i], iterate over all other words with index j.
+   Substring Check: If words[i] is a substring of words[j] and i is not equal to j, add words[i] to the result set.
+8. Return Result: Convert the result set to a list and return it.
+code:
+def stringMatching(words):
+    result = set()
+    for i in range(len(words)):
+        for j in range(len(words)):
+            if i != j and words[i] in words[j]:
+                result.add(words[i])
+    return list(result)
+words = ["mass", "as", "hero", "superhero"]
+print(stringMatching(words)) 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.
+Algorithm:
+1. Iterate through the array: Loop through the array from the first element to the second last element.
+2. Swap elements: For each element at index i, compare it with the next element at index i+1.
+   - If i is even and nums[i] is greater than nums[i+1], swap them.
+   - If i is odd and nums[i] is less than nums[i+1], swap them.
+3.Iterate through the array: Use a for loop to iterate through the array up to the second last element.
+4. Conditional Swap:
+   - If the index i is even, ensure nums[i] < nums[i+1]. If not, swap nums[i] and nums[i+1].
+   - If the index i is odd, ensure nums[i] > nums[i+1]. If not, swap nums[i] and nums[i+1].
+code:
+python
+def wiggleSort(nums):
+    for i in range(len(nums) - 1):
+        if (i % 2 == 0 and nums[i] > nums[i + 1]) or (i % 2 == 1 and nums[i] < nums[i + 1]):
+            nums[i], nums[i + 1] = nums[i + 1], nums[i]
+nums = [3, 5, 2, 1, 6, 4]
+wiggleSort(nums)
+print(nums)  
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.
+Algorithm:
+1.Initialize the queue: Add all cells containing 0 to the queue initially and set their distance to 0 in the distance matrix.
+2. Set initial distances: For all cells containing 1, set their distance to infinity.
+3. BFS traversal: Process each cell in the queue, updating the distance of its neighbors if a shorter path is found, and add the neighbors to the queue. 
+4.Queue Initialization: All cells with 0 are enqueued and their distances set to 0.
+5. Distance Matrix: A matrix to store the shortest distance to the nearest 0.
+6. BFS Traversal: Dequeue a cell, check its four neighbors, update their distance if a shorter path is found, and enqueue the updated neighbors.
+7. Return Result: The updated distance matrix is returned after BFS completes.
+code:
+from collections import deque
+def updateMatrix(mat):
+    m, n = len(mat), len(mat[0])
+    distance = [[float('inf')] * n for _ in range(m)]
+    queue = deque()
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                queue.append((i, j))
+                distance[i][j] = 0
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    while queue:
+        x, y = queue.popleft()
+        for dx, dy in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n:
+                if distance[nx][ny] > distance[x][y] + 1:
+                    distance[nx][ny] = distance[x][y] + 1
+                    queue.append((nx, ny))
+    return distance
+mat = [
+    [0,0,0],
+    [0,1,0],
+    [1,1,1]
+]
+print(updateMatrix(mat))
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
