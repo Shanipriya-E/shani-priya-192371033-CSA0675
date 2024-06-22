@@ -1,0 +1,149 @@
+1.computing binomial coefficient
+algorithm:
+Define the input parameters n and k, where n is the total number of items and k is the number of items to choose.
+Initialize the result result to 1.
+Dynamic Programming:
+Iterate through the range from k to 1.
+For each iteration, update result by multiplying it with (n - k + 1) / k.
+Return result as the final binomial coefficient.
+code:
+def binomial_coefficient(n, k):
+    """
+    Computes the binomial coefficient.
+    Args:
+    n (int): The total number of items.
+    k (int): The number of items to choose.
+    Returns:
+    int: The binomial coefficient.
+    """
+    if k > n - k:
+        k = n - k
+    result = 1
+    for i in range(k):
+        result = result * (n - i) // (i + 1)
+    return result
+n = 5
+k = 3
+binomial_coefficient_value = binomial_coefficient(n, k)
+print(f"The binomial coefficient for {n} choose {k} is: {binomial_coefficient_value}")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.Bellman ford
+algorithm:
+Define the input parameters graph and source, where graph is the weighted graph represented as an adjacency list and source is the source vertex.
+Initialize the distance array dist with infinite values for all vertices except the source vertex, which is set to 0.
+Relaxation:
+Iterate through all edges in the graph.
+For each edge (u, v) with weight w, update the distance dist[v] if dist[u] + w is less than dist[v].
+Detection of Negative Cycles:
+Iterate through all edges in the graph again.
+If there is an edge (u, v) with weight w such that dist[u] + w is less than dist[v], then there is a negative cycle in the graph.
+code:
+def bellman_ford(graph, source):
+    """
+    Finds the shortest path from the source vertex to all other vertices in a weighted graph.
+    Args:
+    graph (list of lists): The weighted graph represented as an adjacency list.
+    source (int): The source vertex
+    Returns:
+    list: The shortest distances from the source vertex to all other vertices.
+    """
+    n = len(graph)
+    dist = [float('inf')] * n
+    dist[source] = 0
+        for u in range(n):
+            for v in range(n):
+                if graph[u][v] != 0:
+                    if dist[u] + graph[u][v] < dist[v]:
+                        dist[v] = dist[u] + graph[u][v]
+
+    for u in range(n):
+        for v in range(n):
+            if graph[u][v] != 0:
+                if dist[u] + graph[u][v] < dist[v]:
+                    return "Graph contains a negative cycle"
+    return dist
+graph = [[0, 3, 0, 0],
+         [0, 0, 2, 0],
+         [0, 0, 0, 1],
+         [0, 0, 0, 0]]
+source = 0
+distances = bellman_ford(graph, source)
+print(f"The shortest distances from vertex {source} are: {distances}")
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.waarshals floyd Algorithm:
+Algorithm:
+-Initialization:
+Create a distance matrix distance of size V x V where V is the number of vertices in the graph.
+Initialize the distance matrix with the graph's adjacency matrix. If there is no edge between vertices i and j, set distance[i][j] to INF.
+-Floyd Warshall Algorithm:
+Run three nested loops to update the distance matrix.
+For each vertex k, update the distance between vertices i and j if taking a detour through vertex k is shorter.
+-Return:
+Return the updated distance matrix.
+code:
+def floydWarshall(graph):
+    V = len(graph)
+    INF = 99999
+    distance = [[INF for _ in range(V)] for _ in range(V)]
+    for i in range(V):
+        for j in range(V):
+            if i == j:
+                distance[i][j] = 0
+            elif graph[i][j] != INF:
+                distance[i][j] = graph[i][j]
+    for k in range(V):
+        for i in range(V):
+            for j in range(V):
+                if distance[i][k] + distance[k][j] < distance[i][j]:
+                    distance[i][j] = distance[i][k] + distance[k][j]
+    return distance
+graph = [[0, 5, INF, 10],
+         [INF, 0, 3, INF],
+         [INF, INF, 0, 1],
+         [INF, INF, INF, 0]]
+
+print(floydWarshall(graph))
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.meet in middle technic:
+Algorithm:
+-This code first calculates all possible subset sums for the first half of the array and the second half of the array. 
+-It then sorts the subset sums of the second half. 
+-It iterates over all subset sums in the first half and finds the maximum subset sum in the second half that is less than or equal to the given sum minus the current subset sum. 
+-The maximum subset sum found is the result.
+code:
+def meet_in_the_middle(arr, n, S):
+    # Calculate all possible subset sums for the first half
+    X = [0] * (1 << (n // 2))
+    for i in range(1 << (n // 2)):
+        s = 0
+        for j in range(n // 2):
+            if (i & (1 << j)) != 0:
+                s += arr[j]
+        X[i] = s
+    Y = [0] * (1 << (n - n // 2))
+    for i in range(1 << (n - n // 2)):
+        s = 0
+        for j in range(n - n // 2):
+            if (i & (1 << j)) != 0:
+                s += arr[j + n // 2]
+        Y[i] = s
+    Y.sort()
+    max_sum = 0
+    for i in range(1 << (n // 2)):
+        if X[i] <= S:
+            p = lower_bound(Y, S - X[i])
+            if p != len(Y) and Y[p] == S - X[i]:
+                max_sum = max(max_sum, X[i] + Y[p])
+    return max_sum
+def lower_bound(arr, x):
+    l = -1
+    r = len(arr)
+    while l + 1 < r:
+        m = (l + r) // 2
+        if arr[m] < x:
+            l = m
+        else:
+            r = m
+    return r
+arr = [3, 34, 4, 12, 5, 2]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
