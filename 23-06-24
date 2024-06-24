@@ -1,0 +1,483 @@
+1.
+algorithm:
+Create a 3D dynamic programming array dp of size (n + 1) x 2 x 2, where dp[i][less1][less2] represents the number of good strings of length i that are:
+Lexicographically less than or equal to s1[:i] if less1 == 1.
+Lexicographically greater than or equal to s2[:i] if less2 == 1.
+Do not contain the substring evil.
+Base Case: Initialize dp = 1, as there is one good string of length 0 (the empty string).
+Iterative Filling: Iterate through the positions i from 1 to n. For each position:
+Iterate through all possible characters char from 'a' to 'z'.
+Calculate the new less1 and less2 values based on the current character and the corresponding characters in s1 and s2.
+Check if the current string (formed by concatenating s1[:i-1] or s2[:i-1] with the current char) does not contain the substring evil.
+If the conditions are met, update the dp[i][new_less1][new_less2] value by adding the value from the previous state dp[i-1][less1][less2].
+Return: Return the sum of all values in the dp[n] array, taken modulo 10^9 + 7.
+The time complexity of this solution is O(n * 26 * 2 * 2), as we iterate through the positions, characters, and 
+the two boolean flags. The space complexity is O(n * 2 * 2), as we use a 3D dynamic programming array to store the intermediate results.
+code:
+def findGoodStrings(n, s1, s2, evil):
+    MOD = 10 ** 9 + 7
+    dp = [[[0] * 2 for _ in range(2)] for _ in range(n + 1)]
+    dp[0][0][0] = 1
+    for i in range(1, n + 1):
+        for less1 in range(2):
+            for less2 in range(2):
+                for c in range(26):
+                    char = chr(c + ord('a'))
+                    new_less1 = less1 or (char < s1[i - 1])
+                    new_less2 = less2 or (char > s2[i - 1])
+                    if evil not in (s1[:i - 1] + char, s2[:i - 1] + char):
+                        dp[i][new_less1][new_less2] = (dp[i][new_less1][new_less2] + dp[i - 1][less1][less2]) % MOD
+    return sum(sum(dp[n])) % MOD
+n = 2
+s1 = "aa"
+s2 = "da"
+evil = "b"
+print(findGoodStrings(n, s1, s2, evil))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.
+algorithm:
+ Initialize a counter count to zero and a candidate element candidate to None.
+Traversal: Iterate through the input array nums. For each element num:
+If count is zero, set candidate to num and increment count to one.
+If candidate is equal to num, increment count by one.
+If candidate is not equal to num, decrement count by one.
+Return: Return the candidate element, which is the majority element.
+The key idea behind this algorithm is that if we cancel out each occurrence of an element x with all the other elements that are different from x, 
+then x will exist till the end if it is a majority element.
+The time complexity of this solution is O(n), where n is the size of the input array nums. The space complexity is O(1), 
+as we only use a constant amount of extra space.
+code:
+def majorityElement(nums):
+    count = 0
+    candidate = None
+    for num in nums:
+        if count == 0:
+            candidate = num
+            count = 1
+        elif candidate == num:
+            count += 1
+        else:
+            count -= 1
+    return candidate
+nums = [3, 2, 3]
+print(majorityElement(nums))
+nums = [2, 2, 1, 1, 1, 2, 2]
+print(majorityElement(nums)) 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.
+algorithm:
+Initialize an empty list result to store the transpose of the input matrix.
+Traversal: Iterate through the columns of the input matrix. For each column i:
+Create a new list row by iterating through the rows of the input matrix and selecting the ith element of each row.
+Append the row list to the result list.
+Return: Return the result list, which is the transpose of the input matrix.
+The time complexity of this solution is O(n * m), where n is the number of rows and m is the number of columns in the input matrix. 
+This is because we iterate through each element of the matrix once. The space complexity is O(n * m), as we need to store the transpose of the matrix.
+code:
+def transpose(matrix):
+    return [[row[i] for row in matrix] for i in range(len(matrix[0]))]
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+print(transpose(matrix))
+matrix = [[1, 2, 3], [4, 5, 6]]
+print(transpose(matrix))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.
+algorithm:
+Initialize a variable count to keep track of the number of pairs that satisfy the conditions.
+Traversal: Iterate through the elements of the input arrays nums1 and nums2. For each element i in nums1 and each element j in nums2 such that i < j:
+Check if the condition nums1[i] - nums1[j] <= nums2[i] - nums2[j] + diff is satisfied.
+If the condition is satisfied, increment the count variable.
+Return: Return the count variable, which represents the number of pairs that satisfy the conditions.
+The time complexity of this solution is O(n^2), where n is the size of the input arrays nums1 and nums2. 
+This is because we iterate through each element of the arrays once. The space complexity is O(1), as we only use a constant amount of extra space.
+code:
+def countPairs(nums1, nums2, diff):
+    n = len(nums1)
+    count = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if nums1[i] - nums1[j] <= nums2[i] - nums2[j] + diff:
+                count += 1
+    return count
+nums1 = [3, 2, 5]
+nums2 = [2, 2, 1]
+diff = 1
+print(countPairs(nums1, nums2, diff))
+-------------------------------------------------------------------------------------------------------------------------------------------
+5.
+algorithm:
+Initialize a variable num to store the number from which we will find the nth digit.
+Traversal: Iterate through the digits of the number num. For each digit i:
+Check if the digit i is the nth digit of the number num.
+If the digit i is the nth digit, return the digit i.
+Return: Return the nth digit of the number num.
+The time complexity of this solution is O(1), as we only need to perform a constant number of operations to find the nth digit. 
+The space complexity is O(1), as we only use a constant amount of extra space.
+code:
+def findNthDigit(n):
+    if n <= 9:
+        return str(n)[0]
+    n -= 9
+    length = 1
+    while n >= 10 ** length:
+        n -= 10 ** length * 9
+        length += 1
+    num = int(str(10 ** length - 1 + n // length)[n % length])
+    return str(num)[n % length]
+n = 3
+print(findNthDigit(n))
+n = 11
+print(findNthDigit(n)) 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+6.
+algorithm:
+Initialize variables max_len to store the length of the longest nice substring and max_substr to store the longest nice substring.
+Traversal: Iterate through the string s using two nested loops to generate all possible substrings.
+Checking: For each substring substr, check if it is nice by ensuring that all letters of the alphabet appear both in uppercase and lowercase.
+ If the substring is nice and its length is greater than max_len, update max_len and max_substr.
+Return: Return the longest nice substring max_substr.
+The time complexity of this solution is O(n^2), where n is the length of the input string s. 
+This is because we iterate through all possible substrings of s. The space complexity is O(1), as we only use a constant amount of extra space.
+code:
+def longestNiceSubstring(s):
+    n = len(s)
+    max_len = 0
+    max_substr = ""
+    for i in range(n):
+        for j in range(i + 1, n + 1):
+            substr = s[i:j]
+            if all(c.lower() in substr.lower() for c in set(substr)) and len(substr) > max_len:
+                max_len = len(substr)
+                max_substr = substr
+    return max_substr
+s = "YazaAay"
+print(longestNiceSubstring(s)) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+7.
+algorithm:
+Split the input sentence into a list of words using the split() method.
+Traversal: Iterate through the list of words using the enumerate() function to get both the index and the word.
+Checking: For each word, check if it starts with the searchWord using the startswith() method. If it does, return the index of the word (1-indexed).
+Return: If the searchWord is not a prefix of any word, return 1.
+The time complexity of this solution is O(n), where n is the number of words in the sentence.
+This is because we iterate through each word once. The space complexity is O(n), as we need to store the list of words.
+code:
+def isPrefixOfWord(sentence, searchWord):
+    words = sentence.split()
+    for i, word in enumerate(words):
+        if word.startswith(searchWord):
+            return i + 1
+    return 1
+sentence = "i love eating burger"
+searchWord = "burg"
+print(isPrefixOfWord(sentence, searchWord))
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.
+algorithm:
+Check if the indexDiff is 0. If it is, we can simply check if there are any two elements in the nums array that satisfy the valueDiff condition.
+Traversal: Iterate through the nums array using a single loop. For each element nums[i], check the elements within the range [max(0, i - indexDiff), min(len(nums), i + indexDiff + 1)].
+Checking Conditions: For each pair of elements nums[i] and nums[j] where i != j,
+check if the absolute difference between their indices is less than or equal to indexDiff and the absolute difference between their values is less than or equal to valueDiff.
+Return: If a pair of indices is found that satisfies the conditions, return True. Otherwise, return False.
+code:
+def containsNearbyAlmostDuplicate(nums, indexDiff, valueDiff):
+    if indexDiff == 0:
+        return any(abs(x - y) <= valueDiff for i, x in enumerate(nums) for j, y in enumerate(nums) if i != j)
+    for i in range(len(nums)):
+        for j in range(max(0, i - indexDiff), min(len(nums), i + indexDiff + 1)):
+            if i != j and abs(nums[i] - nums[j]) <= valueDiff:
+                return True
+    return False
+nums = [1, 2, 3, 1]
+indexDiff = 3
+valueDiff = 0
+print(containsNearbyAlmostDuplicate(nums, indexDiff, valueDiff))
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+9
+algorithm:
+Initialize two pointers, i and j, to 0 and n - 1, respectively, where n is the length of the input array nums.
+While i is less than n - 1 and nums[i] is equal to nums[i + 1], increment i by 1.
+While j is greater than i and nums[j] is equal to nums[j - 1], decrement j by 1.
+Return j - i + 1 as the minimum length of the array after removing elements.
+Time Complexity: O(n)
+Space Complexity: O(1)
+code:
+def minLength(nums):
+    n = len(nums)
+    i = 0
+    while i < n - 1 and nums[i] == nums[i + 1]:
+        i += 1
+    j = n - 1
+    while j > i and nums[j] == nums[j - 1]:
+        j -= 1
+    return j - i + 1
+nums = [1, 2, 3, 4]
+print(minLength(nums)) 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+10
+algorithm:
+Initialize a recursive function sortedArrayToBST that takes an array nums as input.
+If nums is empty, return None.
+Calculate the middle index mid of nums.
+Create a new TreeNode with the value at mid and set it as the root.
+Recursively call sortedArrayToBST on the left half of nums and set it as the left child of the root.
+Recursively call sortedArrayToBST on the right half of nums and set it as the right child of the root.
+Return the root.
+Time Complexity: O(n)
+Space Complexity: O(n)
+code:
+class TreeNode:
+    def _init_(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+def sortedArrayToBST(nums):
+    if not nums:
+        return None
+    mid = len(nums) // 2
+    root = TreeNode(nums[mid])
+    root.left = sortedArrayToBST(nums[:mid])
+    root.right = sortedArrayToBST(nums[mid + 1:])
+    return root
+nums = [-10, -3, 0, 5, 9]
+root = sortedArrayToBST(nums)
+print(root) 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11
+algorithm:
+Initialize an empty list result to store the substrings.
+Iterate through each word word in the input array words.
+For each word, iterate through each other word other_word in the input array.
+If word is not equal to other_word and word is a substring of other_word, add word to result and break the loop.
+Return result.
+Time Complexity: O(n^2)
+Space Complexity: O(n)
+code:
+def findSubstrings(words):
+    result = []
+    for word in words:
+        for other_word in words:
+            if word != other_word and word in other_word:
+                result.append(word)
+                break
+    return result
+words = ["mass", "as", "hero", "superhero"]
+print(findSubstrings(words))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+12
+algorithm:
+Sort the input array nums in ascending order.
+Initialize an empty list result to store the reordered array.
+Iterate through each element num in nums.
+If num is even, append num to result.
+If num is odd, append nums[-1] to result and decrement nums[-1] by 1.
+Return result.
+Time Complexity: O(n)
+Space Complexity: O(n)
+code:
+def wiggleSort(nums):
+    nums.sort()
+    for i in range(len(nums) - 1):
+        if i % 2 == 0:
+            nums[i], nums[i + 1] = nums[i + 1], nums[i]
+    return nums
+nums = [1, 5, 1, 1, 6, 4]
+print(wiggleSort(nums)) 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13
+algorithm:
+Initialize a 2D array res of the same size as the input matrix mat, filled with infinity.
+Iterate through each cell in the matrix. If the cell is 0, set its corresponding value in res to 0.
+For each cell, check the cells above and to the left. If the cell above or to the left is 0, 
+update the value in res to be the minimum of its current value and the distance to the 0 cell.
+Repeat step 3 for the cells below and to the right.
+Return the res array.
+Time Complexity: O(m * n)
+Space Complexity: O(m * n)
+code:
+def updateMatrix(mat):
+    m, n = len(mat), len(mat[0])
+    res = [[float('inf')] * n for _ in range(m)]
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                res[i][j] = 0
+            elif i > 0:
+                res[i][j] = min(res[i][j], res[i - 1][j] + 1)
+            if j > 0:
+                res[i][j] = min(res[i][j], res[i][j - 1] + 1)
+    for i in range(m - 1, -1, -1):
+        for j in range(n - 1, -1, -1):
+            if i < m - 1:
+                res[i][j] = min(res[i][j], res[i + 1][j] + 1)
+            if j < n - 1:
+                res[i][j] = min(res[i][j], res[i][j + 1] + 1)
+    return res
+mat = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+print(updateMatrix(mat))  # Output: [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14.Merge Linked Lists
+Algorithm:
+Initialize a dummy node dummy and a pointer current to dummy.
+Iterate through the linked lists. For each node, check if it is the smallest in the current list. If it is, add it to the result list and update the current node.
+Repeat step 2 until all nodes have been processed.
+Return the result list.
+Time Complexity: O(n)
+Space Complexity: O(n)
+code:
+class ListNode:
+    def _init_(self, val=0, next=None):
+        self.val = val
+        self.next = next
+def mergeKLists(lists):
+    dummy = ListNode()
+    current = dummy
+    while True:
+        min_val = float('inf')
+        min_node = None
+        for node in lists:
+            if node and node.val < min_val:
+                min_val = node.val
+                min_node = node
+        if not min_node:
+            break
+        current.next = min_node
+        current = current.next
+        lists[lists.index(min_node)] = min_node.next
+    return dummy.next
+lists = [[1, 4, 5], [1, 3, 4], [2, 6]]
+print(mergeKLists(lists)) 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15.Minimum Operations to Make Array Strictly Increasing
+Algorithm:
+Initialize a variable res to 0.
+Iterate through the array. For each element, check if it is less than the corresponding element in the other array. 
+If it is, increment res and update the element in the array.
+Return res if the array is strictly increasing, otherwise return -1.
+Time Complexity: O(n)
+Space Complexity: O(1)
+code:
+def minOperations(arr1, arr2):
+    n = len(arr1)
+    res = 0
+    for i in range(n):
+        while arr1[i] < arr2[i]:
+            res += 1
+            arr1[i] = arr2[i]
+    return res if all(arr1[i] < arr1[i + 1] for i in range(n - 1)) else -1
+arr1 = [1, 5, 3, 6, 7]
+arr2 = [1, 3, 2, 4]
+print(minOperations(arr1, arr2)) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+16.Median of Two Sorted Arrays
+Algorithm:
+Merge the two sorted arrays into one sorted array.
+Calculate the median of the merged array.
+Time Complexity: O(n log n)
+Space Complexity: O(n)
+code:
+def findMedianSortedArrays(nums1, nums2):
+    merged = sorted(nums1 + nums2)
+    n = len(merged)
+    return merged[n // 2] if n % 2 else (merged[n // 2 - 1] + merged[n // 2]) / 2
+nums1 = [1, 3]
+nums2 = [2]
+print(findMedianSortedArrays(nums1, nums2))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17.Repeat String to Make Substring
+Algorithm:
+Initialize a variable res to -1.
+Iterate through the string. For each substring, check if it is equal to the target substring. 
+If it is, return the length of the substring.
+Return res if no substring is found.
+Time Complexity: O(n)
+Space Complexity: O(1)
+code:
+def repeatStringMatch(a, b):
+    n = len(a)
+    m = len(b)
+    for i in range(n - m + 1):
+        if a[i:i + m] == b:
+            return i // (m // len(b)) + 1
+    return -1
+a = "abcd"
+b = "cdabcdab"
+print(repeatStringMatch(a, b))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+18.Unique Quadruplets
+Algorithm:
+Initialize an empty list res to store the quadruplets.
+Iterate through the array. For each element, check if it is less than the corresponding element in the other array.
+If it is, add it to the result list and update the element in the array.
+Repeat step 2 until all elements have been processed.
+Return the result list.
+Time Complexity: O(n^3)
+Space Complexity: O(n^2)
+code:
+def fourSum(nums, target):
+    nums.sort()
+    res = []
+    for i in range(len(nums) - 3):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        for j in range(i + 1, len(nums) - 2):
+            if j > i + 1 and nums[j] == nums[j - 1]:
+                continue
+            left, right = j + 1, len(nums) - 1
+            while left < right:
+                s = nums[i] + nums[j] + nums[left] + nums[right]
+                if s < target:
+                    left += 1
+                elif s > target:
+                    right -= 1
+                else:
+                    res.append([nums[i], nums[j], nums[left], nums[right]])
+                    while left < right and nums[left] == nums[left + 1]:
+                        left += 1
+                    while left < right and nums[right] == nums[right - 1]:
+                        right -= 1
+                    left += 1
+                    right -= 1
+    return res
+nums = [1, 0, -1, 0, -2, 2]
+target = 0
+print(fourSum(nums, target)) 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+19.Missing Number
+Algorithm:
+Calculate the sum of the first n natural numbers using the formula n * (n + 1) / 2.
+Subtract the sum of the elements in the array from the calculated sum.
+Return the result.
+Time Complexity: O(n)
+Space Complexity: O(1)
+code:
+def findMissingNumber(nums):
+    n = len(nums)
+    return n * (n + 1) // 2 - sum(nums)
+nums = [3, 0, 1]
+print(findMissingNumber(nums))
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+20.Majority Element
+Algorithm:
+Initialize a variable count to 0 and a variable candidate to None.
+Iterate through the array. For each element, check if it is equal to the candidate.
+If it is, increment count. If it is not, decrement count. If count becomes 0, update the candidate to the current element.
+Return the candidate.
+Time Complexity: O(n)
+Space Complexity: O(1)
+code:
+def majorityElement(nums):
+    count = 0
+    candidate = None
+    for num in nums:
+        if count == 0:
+            candidate = num
+            count = 1
+        elif candidate == num:
+            count += 1
+        else:
+            count -= 1
+    return candidate
+nums = [3, 2, 3]
+print(majorityElement(nums)) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
