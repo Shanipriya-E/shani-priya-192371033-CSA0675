@@ -1,0 +1,282 @@
+31.
+Alogorithm:
+-Initialize a distance matrix dist of the same size as mat and initialize all entries to INT_MAX.
+-Create a queue to store cell indices (i, j) where mat[i][j] == 1.
+-For each cell (i, j) in mat:
+-If mat[i][j] == 0, set dist[i][j] = 0 and enqueue (i, j) into the queue.
+-While the queue is not empty:
+-Dequeue a cell (i, j) from the queue.
+-For each adjacent cell (x, y) (up, down, left, right):
+-If (x, y) is within bounds and dist[x][y] > dist[i][j] + 1, update dist[x][y] = dist[i][j] + 1 and enqueue (x, y) into the queue.
+-The resulting dist matrix contains the distance of the nearest 0 for each cell.
+code:
+def nearestZero(mat):
+    m, n = len(mat), len(mat[0])
+    MAX = float('inf')
+    dist = [[MAX] * n for _ in range(m)]
+    queue = []
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                dist[i][j] = 0
+                queue.append((i, j))
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    while queue:
+        i, j = queue.pop(0)
+        for dx, dy in directions:
+            x, y = i + dx, j + dy
+            if 0 <= x < m and 0 <= y < n and dist[x][y] > dist[i][j] + 1:
+                dist[x][y] = dist[i][j] + 1
+                queue.append((x, y))
+    return dist
+mat = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+result = nearestZero(mat)
+for row in result:
+    print(row)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+32.
+Algorithm:
+-Sort arr2 in ascending order.
+-Initialize a dynamic programming array dp of size n (where n is the length of arr1).
+-Initialize dp[0] to 0 (since no operations are needed for the first element).
+-For each index i from 1 to n-1:
+-Initialize dp[i] to infinity (a large value).
+-For each index j from 0 to i-1:
+-If arr1[j] < arr1[i], update dp[i] as the minimum of dp[i] and dp[j].
+-If arr1[j] >= arr1[i], find the smallest value k in arr2 such that k > arr1[j]. If such a value exists, update dp[i] as the minimum of dp[i] and dp[j] + 1.
+-If dp[n-1] remains infinity, return -1 (indicating that it’s impossible to make arr1 strictly increasing).
+-Otherwise, return dp[n-1].
+code:
+def minOperations(arr1, arr2):
+    arr2.sort()  
+    n = len(arr1)
+    dp = [float('inf')] * n
+    dp[0] = 0
+    for i in range(1, n):
+        for j in range(i):
+            if arr1[j] < arr1[i]:
+                dp[i] = min(dp[i], dp[j])
+            else:
+                k = bisect_left(arr2, arr1[j] + 1)
+                if k < len(arr2):
+                    dp[i] = min(dp[i], dp[j] + 1)
+
+    return dp[-1] if dp[-1] != float('inf') else -1
+arr1 = [1, 5, 3, 6, 7]
+arr2 = [1, 3, 2, 4]
+result = minOperations(arr1, arr2)
+print(result) 
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+33.
+Algorithm:
+-Initialize a variable repeats to 1 (since repeating a zero times is equivalent to an empty string).
+-Initialize a string current to the value of a.
+-While the length of current is less than or equal to the combined length of a and b:
+-If b is a substring of current, return the value of repeats.
+-Otherwise, concatenate a to current and increment repeats by 1.
+-If we exit the loop without finding a solution, return -1.
+code:
+def min_repeats(a, b):
+    repeats = 1
+    current = a
+    while len(current) <= len(a) + len(b):
+        if b in current:
+            return repeats
+        current += a
+        repeats += 1
+    return -1
+a = "abcd"
+b = "cdabcdab"
+result = min_repeats(a, b)
+print(result)  
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+34.
+Algorithm:
+-Calculate the sum of the first N natural numbers using the formula: total_sum = N * (N + 1) / 2.
+-Compute the sum of all elements in the array (array_sum).
+-The missing number is total_sum - array_sum.
+code:
+def getMissingNo(arr, n):
+    N = n + 1
+    total_sum = N * (N + 1) // 2
+    array_sum = sum(arr)
+    return total_sum - array_sum
+arr = [1, 2, 3, 5]
+n = len(arr)
+missing_number = getMissingNo(arr, n)
+print(missing_number)
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+35.
+Algorithm:
+-Initialize an empty matrix maxLocal of size (n - 2) x (n - 2) (where n is the size of the original grid).
+-Iterate over rows from 0 to n - 3 (inclusive):
+-For each row, iterate over columns from 0 to n - 3 (inclusive):
+-Initialize a variable max_val to negative infinity.
+-For each cell in the 3x3 submatrix centered around the current cell:
+-Update max_val with the maximum value encountered.
+-Set maxLocal[i][j] to max_val.
+-Return the maxLocal matrix.
+code:
+def largestLocal(grid):
+    n = len(grid)
+    maxLocal = [[0] * (n - 2) for _ in range(n - 2)]
+
+    for i in range(n - 2):
+        for j in range(n - 2):
+            # Initialize the maximum value for the current 3x3 submatrix
+            max_val = float('-inf')
+            for x in range(i, i + 3):
+                for y in range(j, j + 3):
+                    max_val = max(max_val, grid[x][y])
+            maxLocal[i][j] = max_val
+    return maxLocal
+grid1 = [
+    [9, 9, 8, 1],
+    [5, 6, 2, 6],
+    [8, 2, 6, 4],
+    [6, 2, 2, 2]
+]
+result1 = largestLocal(grid1)
+print(result1)  
+grid2 = [
+    [1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1],
+    [1, 1, 2, 1, 1],
+    [1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1]
+]
+result2 = largestLocal(grid2)
+print(result2)  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+36.
+algorithm:
+-We’ll iterate through each word in the words array.
+-For each word, we’ll check if it starts with the given pref.
+-If it does, we’ll increment a counter to keep track of the number of valid strings.
+-We use the startswith method to check if each word starts with the given prefix.
+-If it does, we increment the count.
+-The final count represents the number of strings in words that contain pref as a prefix.
+code:
+def count_prefix_strings(words, pref):
+    count = 0
+    for word in words:
+        if word.startswith(pref):
+            count += 1
+    return count
+words = ["pay", "attention", "practice", "attend"]
+pref = "at"
+print(count_prefix_strings(words, pref))
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+37.
+algorithm:
+-Traverse the matrix and mark the rows and columns that need to be set to 0.
+-Iterate through the matrix again and set the entire row and column to 0 if the corresponding row or column was marked in the previous step.
+-We use the first row and first column to mark which rows and columns need to be set to 0.
+-After marking, we traverse the matrix again to update the elements based on the marks.
+-Finally, we handle the first row and first column separately.
+code:
+def set_zeroes(matrix):
+    rows, cols = len(matrix), len(matrix[0])
+    first_row_has_zero = any(matrix[0][j] == 0 for j in range(cols))
+    first_col_has_zero = any(matrix[i][0] == 0 for i in range(rows))
+    for i in range(1, rows):
+        for j in range(1, cols):
+            if matrix[i][j] == 0:
+                matrix[i][0] = 0
+                matrix[0][j] = 0
+    for i in range(1, rows):
+        for j in range(1, cols):
+            if matrix[i][0] == 0 or matrix[0][j] == 0:
+                matrix[i][j] = 0
+    if first_row_has_zero:
+        for j in range(cols):
+            matrix[0][j] = 0
+    if first_col_has_zero:
+        for i in range(rows):
+            matrix[i][0] = 0
+matrix = [[1, 1, 1], [1, 0, 1], [1, 1, 1]]
+set_zeroes(matrix)
+print(matrix)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+38.
+algorithm:
+-We convert both input arrays to sets to take advantage of set operations.
+-The & operator computes the intersection of two sets.
+-Finally, we convert the resulting set back to a list.
+code:
+def find_intersection(nums1, nums2):
+    set1 = set(nums1)
+    set2 = set(nums2)
+    intersection = set1 & set2
+    result = list(intersection)
+    return result
+nums1 = [1, 2, 2, 1]
+nums2 = [2, 2]
+print(find_intersection(nums1, nums2))
+nums3 = [4, 9, 5]
+nums4 = [9, 4, 9, 8, 4]
+print(find_intersection(nums3, nums4))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+39.
+algorithm:
+-We’ll iterate through each position in the string of size n.
+-For each position, we’ll consider all possible characters from 'a' to 'z'.
+-If the character is greater than or equal to the corresponding character in s1 and less than or equal to the corresponding
+-character in s2, we’ll recursively generate the remaining part of the string.
+-While generating the string, we’ll avoid any substring that contains the string evil.
+-We’ll use dynamic programming to memoize the results for efficiency.
+code:
+MOD = 10**9 + 7
+def count_good_strings(n, s1, s2, evil):
+    def dfs(pos, prefix, evil_seen):
+        if pos == n:
+            return 1
+        if (pos, prefix, evil_seen) in memo:
+            return memo[(pos, prefix, evil_seen)]
+        count = 0
+        for char in range(ord('a'), ord('z') + 1):
+            next_prefix = prefix + chr(char)
+            if s1 <= next_prefix <= s2:
+                next_evil_seen = evil_seen or (evil in next_prefix)
+                if not next_evil_seen:
+                    count = (count + dfs(pos + 1, next_prefix, next_evil_seen)) % MOD
+        memo[(pos, prefix, evil_seen)] = count
+        return count
+    memo = {}
+    return dfs(0, "", False)
+n = 2
+s1 = "aa"
+s2 = "da"
+evil = "b"
+print(count_good_strings(n, s1, s2, evil)) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+40.
+algorithm:
+-initialize the dimensions of the input matrix: rows and cols.
+-Create a new matrix called transposed with dimensions swapped (rows become columns and vice versa). Initialize it with zeros.
+-Iterate through each element in the original matrix:
+-For each element at position (i, j) in the input matrix, assign it to position (j, i) in the transposed matrix.
+-Return the transposed matrix as the final result.
+code:
+def transpose_matrix(matrix):
+    rows, cols = len(matrix), len(matrix[0])
+    transposed = [[0] * rows for _ in range(cols)]
+    for i in range(rows):
+        for j in range(cols):
+            transposed[j][i] = matrix[i][j]
+    return transposed
+matrix1 = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+result1 = transpose_matrix(matrix1)
+print(result1)
+matrix2 = [[1, 2, 3], [4, 5, 6]]
+result2 = transpose_matrix(matrix2)
+print(result2) 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
