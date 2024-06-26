@@ -1,0 +1,262 @@
+1.
+Algorithm:
+-Initialize max_val and min_val to the first element of the input array.
+-Iterate through the array, updating max_val and min_val if a larger or smaller value is found.
+-Return the final max_val and min_val.
+code:
+def find_max_min(arr):
+    """
+    Finds the maximum and minimum values in the given array.
+    Args:
+    arr (list): The input array.
+    Returns:
+    (int, int): The maximum and minimum values in the array.
+    """
+    # Initialize max and min to the first element of the array
+    max_val = arr[0]
+    min_val = arr[0]
+    for num in arr:
+        if num > max_val:
+            max_val = num
+        if num < min_val:
+            min_val = num
+    return max_val, min_val
+# Test cases
+print("Test Case 1:")
+arr = [5, 7, 3, 4, 9, 12, 6, 2]
+max_val, min_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+
+print("\nTest Case 2:")
+arr = [1, 3, 5, 7, 9, 11, 13, 15, 17]
+max_val, min_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+
+print("\nTest Case 3:")
+arr = [22, 34, 35, 36, 43, 67, 12, 13, 15, 17]
+max_val, min_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.
+Algorithm:
+-The minimum value in a sorted array is always the first element.
+-The maximum value in a sorted array is always the last element.
+-The function find_max_min() simply returns the first and last elements of the input array.
+code:
+def find_max_min(arr):
+    """
+    Finds the maximum and minimum values in the given sorted array.
+    
+    Args:
+    arr (list): The input sorted array.
+    
+    Returns:
+    (int, int): The maximum and minimum values in the array.
+    """
+    # The minimum value is the first element of the array
+    min_val = arr[0]
+    
+    # The maximum value is the last element of the array
+    max_val = arr[-1]
+    
+    return min_val, max_val
+
+# Test cases
+print("Test Case 1:")
+arr = [2, 4, 6, 8, 10, 12, 14, 18]
+min_val, max_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+
+print("\nTest Case 2:")
+arr = [11, 13, 15, 17, 19, 21, 23, 35, 37]
+min_val, max_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+
+print("\nTest Case 3:")
+arr = [22, 34, 35, 36, 43, 67, 12, 13, 15, 17]
+min_val, max_val = find_max_min(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: Min = {min_val}, Max = {max_val}")
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.
+ALGORITHM:
+-If the input array has 0 or 1 element, it is already sorted, so return the array.
+-Find the middle index of the array.
+-Divide the array into two halves: left half and right half.
+-Recursively sort the left half and right half using merge sort.
+-Merge the sorted left half and right half into a single sorted array.
+CODE:
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+    return merge(left_half, right_half)
+def merge(left, right):
+    result = []
+    left_index = 0
+    right_index = 0
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] < right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+    while left_index < len(left):
+        result.append(left[left_index])
+        left_index += 1
+    while right_index < len(right):
+        result.append(right[right_index])
+        right_index += 1
+    return result
+# Test cases
+print("Test Case 1:")
+arr = [31, 23, 35, 27, 11, 21, 15, 28]
+sorted_arr = merge_sort(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: {sorted_arr}")
+
+print("\nTest Case 2:")
+arr = [22, 34, 25, 36, 43, 67, 52, 13, 65, 17]
+sorted_arr = merge_sort(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: {sorted_arr}")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.
+ALGORITHM:
+-If the input array has 0 or 1 element, it is already sorted, so return the array and the comparison count of 0.
+-Find the middle index of the array.
+-Divide the array into two halves: left half and right half.
+-Recursively sort the left half and right half using merge sort, and keep track of the comparison counts.
+-Merge the sorted left half and right half into a single sorted array, and count the comparisons made during the merge process.
+-Return the sorted array and the total number of comparisons made.
+CODE:
+def merge_sort(arr):
+    comparisons = 0
+    if len(arr) <= 1:
+        return arr, comparisons
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    left_half, left_comparisons = merge_sort(left_half)
+    right_half, right_comparisons = merge_sort(right_half)
+    sorted_arr, merge_comparisons = merge(left_half, right_half)
+    return sorted_arr, left_comparisons + right_comparisons + merge_comparisons
+def merge(left, right):
+    result = []
+    left_index = 0
+    right_index = 0
+    comparisons = 0
+    while left_index < len(left) and right_index < len(right):
+        comparisons += 1
+        if left[left_index] < right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+    while left_index < len(left):
+        result.append(left[left_index])
+        left_index += 1
+    while right_index < len(right):
+        result.append(right[right_index])
+        right_index += 1
+    return result, comparisons
+# Test cases
+print("Test Case 1:")
+arr = [12, 4, 78, 23, 45, 67, 89, 1]
+sorted_arr, comparisons = merge_sort(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: {sorted_arr}")
+print(f"Number of comparisons: {comparisons}")
+
+print("\nTest Case 2:")
+arr = [38, 27, 43, 3, 9, 82, 10]
+sorted_arr, comparisons = merge_sort(arr)
+print(f"Input: N = {len(arr)}, a[] = {arr}")
+print(f"Output: {sorted_arr}")
+print(f"Number of comparisons: {comparisons}")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.
+ALGORITHM:
+-Initialize the distance matrix dist with infinity for all pairs of nodes, except for the diagonal elements, which are set to 0.
+-Add the edges to the distance matrix, setting the weight of each edge.
+-Apply Floyd's algorithm by iterating over all possible intermediate nodes k and updating the distance matrix accordingly.
+-After applying Floyd's algorithm, the distance matrix dist_after contains the shortest distances between all pairs of nodes.
+-To find the shortest path between two nodes, we trace back the path by following the intermediate nodes that minimize the distance.
+CODE:
+def floyd_warshall(n, edges):
+    """
+    Finds the shortest path between all pairs of nodes using Floyd's algorithm.
+    
+    Args:
+    n (int): The number of nodes in the graph.
+    edges (list): A list of edges in the graph, where each edge is a tuple (u, v, w) representing the edge from node u to node v with weight w.
+    
+    Returns:
+    (list, list): The distance matrix before and after applying Floyd's algorithm.
+    """
+    # Initialize the distance matrix
+    dist = [[float('inf')] * n for _ in range(n)]
+    
+    # Set the diagonal elements to 0
+    for i in range(n):
+        dist[i][i] = 0
+    
+    # Add the edges to the distance matrix
+    for u, v, w in edges:
+        dist[u][v] = w
+    
+    # Apply Floyd's algorithm
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                if dist[i][j] > dist[i][k] + dist[k][j]:
+                    dist[i][j] = dist[i][k] + dist[k][j]
+    
+    return dist, dist
+
+# Test case
+n = 4
+edges = [[0, 1, 3], [1, 2, 1], [1, 3, 4], [2, 3, 1]]
+dist_before, dist_after = floyd_warshall(n, edges)
+
+print("Distance matrix before applying Floyd's algorithm:")
+for row in dist_before:
+    print(row)
+
+print("\nDistance matrix after applying Floyd's algorithm:")
+for row in dist_after:
+    print(row)
+
+# Find the shortest path between all pairs of nodes
+for i in range(n):
+    for j in range(n):
+        if i != j:
+            path = [i]
+            k = i
+            while k != j:
+                for l in range(n):
+                    if dist_after[k][l] + dist_after[l][j] == dist_after[k][j]:
+                        path.append(l)
+                        k = l
+                        break
+            path.append(j)
+            print(f"Shortest path from {i} to {j}: {' -> '.join(map(str, path))}")
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.
+
+
+
+
+
+
