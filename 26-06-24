@@ -253,7 +253,52 @@ for i in range(n):
             path.append(j)
             print(f"Shortest path from {i} to {j}: {' -> '.join(map(str, path))}")
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-6.
+6
+algorithm:
+Create a set sptSet (shortest path tree set) to keep track of vertices included in the shortest path tree. Initially, this set is empty.
+Assign a distance value to all vertices in the input graph. Initialize all distance values as INFINITE, except for the source vertex (E), which is assigned a distance value of 0.
+While sptSet doesn’t include all vertices:
+Pick a vertex u that is not in sptSet and has the minimum distance value.
+Include u in sptSet.
+Update the distance value of all adjacent vertices of u. For each adjacent vertex v, if the sum of the distance value of 
+u (from the source) and the weight of the edge u-v is less than the current distance value of v, update the distance value of v.
+The final distance values represent the shortest paths from the source (E) to all other vertices.
+code:
+def minDistance(dist, sptSet):
+    min_dist = float('inf')
+    min_index = -1
+    for v in range(len(dist)):
+        if not sptSet[v] and dist[v] <= min_dist:
+            min_dist = dist[v]
+            min_index = v
+    return min_index
+def dijkstra(graph, src):
+    V = len(graph)
+    dist = [float('inf')] * V
+    sptSet = [False] * V
+    dist[src] = 0
+    for _ in range(V - 1):
+        u = minDistance(dist, sptSet)
+        sptSet[u] = True
+        for v in range(V):
+            if not sptSet[v] and graph[u][v] and dist[u] != float('inf') and dist[u] + graph[u][v] < dist[v]:
+                dist[v] = dist[u] + graph[u][v]
+    return dist
+graph = [
+    [0, 4, 0, 0, 0, 0, 0, 8, 0],
+    [4, 0, 8, 0, 0, 0, 0, 11, 0],
+    [0, 8, 0, 7, 0, 4, 0, 0, 2],
+    [0, 0, 7, 0, 9, 14, 0, 0, 0],
+    [0, 0, 0, 9, 0, 10, 0, 0, 0],
+    [0, 0, 4, 14, 10, 0, 2, 0, 0],
+    [0, 0, 0, 0, 0, 2, 0, 1, 6],
+    [8, 11, 0, 0, 0, 0, 1, 0, 7]
+]
+source_vertex = 4 
+shortest_distances = dijkstra(graph, source_vertex)
+target_vertex = 2  
+print(f"Shortest path from E to C = {shortest_distances[target_vertex]}")
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
