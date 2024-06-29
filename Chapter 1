@@ -1,0 +1,78 @@
+1.
+algorithm:
+-Iterate through the words array.
+-For each word, check if it is a palindrome by comparing the word with its reverse.
+-If the word is a palindrome, return it.
+-If no palindromic word is found, return an empty string.
+code:
+def first_palindrome(words):
+    for word in words:
+        if word == word[::-1]:
+            return word
+    return ""
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2.
+Algorithm:
+-Convert the input arrays nums1 and nums2 to sets set1 and set2, respectively. 
+-This allows for efficient lookup of elements in the other array.
+-Iterate through the nums1 array and count the number of elements that exist in set2. This gives us answer1.
+-Iterate through the nums2 array and count the number of elements that exist in set1. This gives us answer2.
+-Return the list [answer1, answer2].
+code:
+def count_common_elements(nums1, nums2):
+    set1 = set(nums1)
+    set2 = set(nums2)
+    answer1 = sum(1 for num in nums1 if num in set2)
+    answer2 = sum(1 for num in nums2 if num in set1)
+    return [answer1, answer2]
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.
+Algorithm:
+-Initialize a variable result to keep track of the sum of the squares of distinct counts.
+-Iterate through the array nums using two nested loops:
+-The outer loop iterates through the starting indices i of the subarrays.
+-The inner loop iterates through the ending indices j of the subarrays.
+-For each subarray nums[i:j+1], we keep track of the distinct elements in a set seen.
+-We then add the square of the size of the seen set (i.e., the distinct count) to the result variable.
+-Finally, we return the result.
+code:
+def sum_of_distinct_counts(nums):
+    n = len(nums)
+    result = 0
+    for i in range(n):
+        seen = set()
+        for j in range(i, n):
+            seen.add(nums[j])
+            result += len(seen) ** 2
+    return result
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4.
+algorithm:
+-Initialize a variable count to keep track of the number of valid pairs.
+-Iterate through the array nums using two nested loops:
+-The outer loop iterates through the indices i from 0 to n-1.
+-The inner loop iterates through the indices j from i+1 to n-1.
+-For each pair (i, j), check if nums[i] == nums[j] and if (i * j) is divisible by k.
+-If both conditions are met, increment the count variable.
+-After iterating through all pairs, return the count.
+code:
+def count_pairs(nums, k):
+    n = len(nums)
+    count = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if nums[i] == nums[j] and (i * j) % k == 0:
+                count += 1
+    return count
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5.
+algorithm:
+The function length_of_array takes an array arr as input.
+It simply returns the length of the input array using the built-in len() function
+code:
+def length_of_array(arr):
+    """
+    Given an array 'arr', return the length of the array.
+    """
+    return len(arr)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
