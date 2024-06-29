@@ -75,4 +75,231 @@ def length_of_array(arr):
     Given an array 'arr', return the length of the array.
     """
     return len(arr)
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+6.
+algorithm:
+-Check if the input list nums is empty. If it is, return None to indicate that the list is empty.
+-Sort the input list nums using the built-in sorted() function, which uses an efficient sorting algorithm (typically Timsort, a hybrid of Insertion Sort and Merge Sort).
+-After sorting the list, the maximum element will be the last element in the sorted list. Return this element.
+code:
+def find_max_in_sorted_list(nums):
+    if not nums:
+        return None
+    sorted_nums = sorted(nums)
+    return sorted_nums[-1]
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+7.
+algorithm:
+-Convert the input list nums to a set using the set() function. 
+-This will remove all the duplicate elements, as sets only store unique values.
+-Convert the resulting set back to a list using the list() function and return it.
+code:
+def get_unique_elements(nums):
+    unique_elements = get_unique_elements(nums)
+nums={1,2,3,4,4,4,5}
+    return list(set(nums))
+print(unique_elements) 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+8.
+algorithm:
+-The function bubble_sort takes an input array arr as a parameter.
+-The length of the input array is stored in the variable n.
+-The outer loop iterates through the array from 0 to n-1. This represents the number of passes needed to sort the array.
+-The inner loop iterates through the array from 0 to n-i-1. 
+-This is because the last i elements are already in their correct position and don't need to be compared.
+-Within the inner loop, if the current element is greater than the next element, they are swapped.
+-After the loops complete, the sorted array is returned.
+code:
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+9. 
+algorithm:
+-The function binary_search takes two parameters: arr (the sorted array) and key (the element to search for).
+-Initialize two pointers: 
+  left to the first index of the array (0) and right to the last index of the array (len(arr) - 1).
+-Enter a while loop that continues as long as left is less than or equal to right.
+-Calculate the middle index mid as (left + right) // 2.
+-Compare the element at the middle index (arr[mid]) with the key:
+   If they are equal, return the middle index mid.
+-If the middle element is less than the key, update left to mid + 1 to search in the right half.
+-If the middle element is greater than the key, update right to mid - 1 to search in the left half.
+-If the key is not found after the while loop, return -1 to indicate that the element is not present in the array.
+code:
+def binary_search(arr, key):
+    left = 0
+    right = len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == key:
+            return mid
+        elif arr[mid] < key:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10.
+algorithm:
+-The merge_sort function takes an input array nums as a parameter.
+-If the length of the array is less than or equal to 1, it means the array is already sorted, so we return the array as is.
+-We divide the array into two halves: left_half and right_half, using the middle index mid.
+-We recursively call merge_sort on the left_half and right_half to sort them.
+-After sorting the left and right halves, we call the merge function to merge the sorted halves into a single sorted array.
+-The merge function takes two sorted arrays left and right as parameters.
+-We initialize three pointers: i for the left array, j for the right array, and result to store the merged array.
+-We compare the elements at indices i and j in the left and right arrays, respectively, and append the smaller element to the result array.
+-We increment the corresponding pointer (i or j) based on which element was added to the result array.
+-After the while loop, we append any remaining elements from the left and right arrays to the result array.
+-Finally, we return the result array.
+code:
+def merge_sort(nums):
+    if len(nums) <= 1:
+        return nums
+    mid = len(nums) // 2
+    left_half = nums[:mid]
+    right_half = nums[mid:]
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+    return merge(left_half, right_half)
+def merge(left, right):
+    result = []
+    i = j = 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    result += left[i:]
+    result += right[j:]
+    return result
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11.
+algorithm:
+-We define a helper function dfs that performs a depth-first search to find the number of ways to move the ball out of the grid boundary in N steps.
+-In the dfs function:
+-If the current position (i, j) is outside the grid boundary, we return 1 (as we have found a valid way to move the ball out of the grid).
+-If N is 0, we have used up all the steps and the ball is still inside the grid, so we return 0 (as this is not a valid way to move the ball out of the grid).
+-If the current state (i, j, N) has been previously computed and stored in the memo dictionary, we return the stored value.
+-Otherwise, we recursively call dfs on the four adjacent positions (i+1, j, i-1, j, i, j+1, i, j-1) with N-1 steps remaining, and sum up the results.
+-We store the computed result in the memo dictionary to avoid recomputing it in the future.
+-The find_ways_out_of_grid function initializes the memo dictionary and calls the dfs function with the given parameters, returning the final result.
+code:
+def find_ways_out_of_grid(m, n, N, i, j):
+    def dfs(i, j, N, memo):
+        if i < 0 or i >= m or j < 0 or j >= n:
+            return 1
+        if N == 0:
+            return 0
+        if (i, j, N) in memo:
+            return memo[(i, j, N)]
+        ways = 0
+        ways += dfs(i + 1, j, N - 1, memo)
+        ways += dfs(i - 1, j, N - 1, memo)
+        ways += dfs(i, j + 1, N - 1, memo)
+        ways += dfs(i, j - 1, N - 1, memo)
+        memo[(i, j, N)] = ways
+        return ways
+    return dfs(i, j, N, {})
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+12.
+algorithm:
+-The rob_houses_circular function takes an input array nums representing the amount of money in each house.
+-If the input array is empty, we return 0 as there are no houses to rob.
+-If the input array has only one house, we return the amount of money in that house.
+-We define two helper functions:
+-rob_linear: This function solves the problem for a linear array of houses, using dynamic programming.
+-rob_linear_without_first: This function solves the problem for a linear array of houses, excluding the first house.
+-We call rob_linear on the input array nums[:-1] (excluding the last house) and rob_linear_without_first on the input array nums[1:] (excluding the first house).
+-We return the maximum of the two solutions, as the optimal solution will either include the first house or the last house, but not both.
+code:
+def rob_houses_circular(nums):
+    if not nums:
+        return 0
+    n = len(nums)
+    if n == 1:
+        return nums[0]
+    def rob_linear(nums):
+        dp = [0] * (len(nums) + 1)
+        dp[1] = nums[0]
+        for i in range(2, len(nums) + 1):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i - 1])
+        return dp[-1]
+    def rob_linear_without_first(nums):
+        dp = [0] * (len(nums) + 1)
+        dp[1] = nums[1]
+        for i in range(2, len(nums) + 1):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i - 1])
+        return dp[-1]
+    return max(rob_linear(nums[:-1]), rob_linear_without_first(nums))
+nums = [2, 3, 2]
+print(rob_houses_circular(nums))  
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+13.
+algorithm:
+-The climb_stairs function takes an integer n as input, representing the number of steps in the staircase.
+-If the number of steps is 1 or 2, we can return the number of steps directly, as there is only one way to climb 1 step and two ways to climb 2 steps.
+-We initialize a dynamic programming array dp of size n + 1, where dp[i] will store the number of distinct ways to climb to the i-th step.
+-We set dp to 1 and dp to 2, as there is one way to climb 1 step and two ways to climb 2 steps.
+-We then iterate from 3 to n and compute dp[i] as the sum of dp[i - 1] (the number of ways to climb to the i-1-th step) and dp[i - 2] (the number of ways to climb to the i-2-th step).
+-Finally, we return dp[n], which represents the number of distinct ways to climb to the top of the staircase.
+code:
+def climb_stairs(n):
+    if n <= 2:
+        return n
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    dp[2] = 2
+    for i in range(3, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+14.
+algorithm:
+-The unique_paths function takes two integers m and n as input, representing the dimensions of the grid.
+-We initialize a 2D dynamic programming array dp of size m x n, where dp[i][j] will store the number of unique paths to reach the cell at row i and column j.
+-We initialize the first row and first column of dp to 1, as there is only one way to reach any cell in the first row or first column.
+-We then iterate through the remaining cells of the grid, starting from the second row and second column.
+-For each cell (i, j), we compute dp[i][j] as the sum of dp[i-1][j] (the number of unique paths to reach the cell above) and dp[i][j-1] (the number of unique paths to reach the cell to the left).
+-Finally, we return dp[m-1][n-1], which represents the number of unique paths to reach the bottom-right corner of the grid.
+code:
+def unique_paths(m, n):
+    dp = [[1] * n for _ in range(m)]
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[i][j] = dp[i-1][j] + dp[i][j-1]
+    return dp[m-1][n-1]
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+15.
+algorithm:
+-The large_group_positions function takes a string s as input.
+-We initialize an empty list result to store the intervals of large groups.
+-We initialize a variable start to keep track of the start index of the current group.
+-We iterate through the string s using a for loop:
+-If the current index i is the last index of the string or the character at index i is different from the character at index i+1, it means we have reached the end of a group.
+-We check if the length of the current group (i - start + 1) is greater than or equal to 3. If so, we append the interval [start, i] to the result list.
+-We update start to i + 1 to start tracking the next group.
+-Finally, we return the result list containing the intervals of every large group sorted in increasing order by start index.
+code:
+def large_group_positions(s):
+    result = []
+    start = 0
+    for i in range(len(s)):
+        if i == len(s) - 1 or s[i] != s[i+1]:
+            if i - start >= 2:
+                result.append([start, i])
+            start = i + 1
+    return result
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\
+16.
+algorithm:
+code:
+
+
