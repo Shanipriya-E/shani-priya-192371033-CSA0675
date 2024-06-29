@@ -298,8 +298,59 @@ def large_group_positions(s):
             start = i + 1
     return result
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\
-16.
+16
 algorithm:
+Define a helper function get_neighbors that takes a cell's row and column indices and returns a list of the cell's eight neighboring cells' states (0 or 1).
+Create a new 2D array new_board to store the next state of the board.
+Iterate through each cell in the original board:
+Get the number of live neighbors for the current cell using the get_neighbors function.
+Apply the rules of the Game of Life to determine the new state of the current cell, and update the new_board accordingly.
+Return the new_board as the next state of the game.
 code:
-
-
+def gameOfLife(board):
+    m, n = len(board), len(board[0])=
+    def get_neighbors(i, j):
+        neighbors = []
+        for di in [-1, 0, 1]:
+            for dj in [-1, 0, 1]:
+                if di == dj == 0:
+                    continue
+                ni, nj = i + di, j + dj
+                if 0 <= ni < m and 0 <= nj < n:
+                    neighbors.append(board[ni][nj])
+        return neighbors
+    new_board = [[board[i][j] for j in range(n)] for i in range(m)]
+    for i in range(m):
+        for j in range(n):
+            neighbors = get_neighbors(i, j)
+            live_neighbors = sum(neighbors)
+            if board[i][j] == 1:
+                if live_neighbors < 2 or live_neighbors > 3:
+                    new_board[i][j] = 0
+            else:
+                if live_neighbors == 3:
+                    new_board[i][j] = 1
+    return new_board
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17
+algorithm:
+Initialize a 2D array dp to store the amount of champagne in each glass.
+The size of the array is 101 x 101, as the problem statement mentions that the tower can have up to 100 rows.
+Set the initial amount of champagne in the top glass (row 0, column 0) to the poured value.
+Iterate through the rows of the tower, starting from row 0 up to the query_row.
+For each glass in the current row, check if the amount of champagne in that glass is greater than 1. 
+If so, calculate the excess champagne and distribute it equally to the two glasses in the next row (the current glass and the one to its right).
+After the loop, return the minimum of 1 and the amount of champagne in the query_glass of the query_row. 
+This ensures that the output is capped at 1, as the problem statement specifies.
+code:
+def champagneTower(poured, query_row, query_glass):
+    dp = [[0] * (i + 1) for i in range(101)]
+    dp[0][0] = poured
+    for i in range(query_row):
+        for j in range(i + 1):
+            if dp[i][j] > 1:
+                excess = (dp[i][j] - 1) / 2
+                dp[i + 1][j] += excess
+                dp[i + 1][j + 1] += excess
+    return min(1, dp[query_row][query_glass])
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
