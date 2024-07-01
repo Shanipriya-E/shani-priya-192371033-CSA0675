@@ -1,0 +1,177 @@
+1.GRAPH COLOURING
+from collections import defaultdict
+def graph_coloring(graph):
+    colors = {}
+    vertices = sorted(graph, key=lambda x: len(graph[x]), reverse=True)
+    # Assign colors to vertices
+    for vertex in vertices:
+        used_colors = set(colors.get(neighbor) for neighbor in graph[vertex])
+        for color in range(1, len(vertices)+1):
+            if color not in used_colors:
+                colors[vertex] = color
+                break
+    return colors
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'C', 'D'],
+    'C': ['A', 'B', 'D', 'E'], 
+    'D': ['B', 'C', 'E', 'F'],
+    'E': ['C', 'D', 'F'],
+    'F': ['D', 'E']
+}
+coloring = graph_coloring(graph)
+print(coloring)
+
+
+2.MAX AND MIN
+A=[1,2,3,4,5,6]
+print(max(A))
+print(min(A))
+
+
+4.DIJKSTRA ALGORITHM
+from collections import defaultdict
+import heapq
+def dijkstra(graph, start, end):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    visited = set()
+    pq = [(0, start)]
+    while pq:
+        curr_dist, curr_node = heapq.heappop(pq)
+        if curr_node == end:
+            return curr_dist
+        if curr_node in visited:
+            continue
+        visited.add(curr_node)
+        for neighbor, weight in graph[curr_node].items():
+            distance = curr_dist + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(pq, (distance, neighbor))
+    return float('inf')
+num_nodes = int(input("Enter the number of nodes: "))
+graph = defaultdict(dict)
+for i in range(num_nodes):
+    node = input(f"Enter node {i+1}: ")
+    num_neighbors = int(input(f"Enter the number of neighbors for {node}: "))
+    for j in range(num_neighbors):
+        neighbor = input(f"Enter neighbor {j+1} of {node}: ")
+        weight = int(input(f"Enter the weight of the edge between {node} and {neighbor}: "))
+        graph[node][neighbor] = weight
+start = input("Enter the start node: ")
+end = input("Enter the end node: ")
+distance = dijkstra(graph, start, end)
+if distance == float('inf'):
+    print(f"No path found from {start} to {end}")
+else:
+    print(f"The shortest distance from {start} to {end} is {distance}")
+
+5.SELECTION SORT
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        # Find the minimum element in the unsorted part of the list
+        min_idx = i
+        for j in range(i+1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+num_elements = int(input("Enter the number of elements: "))
+arr = []
+for i in range(num_elements):
+    element = int(input(f"Enter element {i+1}: "))
+    arr.append(element)
+sorted_arr = selection_sort(arr)
+print("Sorted list:", sorted_arr)
+W
+6.SEQUENCIAL SEARCH
+def sequential_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i  # Return the index if the target is found
+    return -1  # Return -1 if the target is not found
+user_input = input("Enter a list of numbers separated by spaces: ")
+numbers = [int(num) for num in user_input.split()]
+target = int(input("Enter the target number to search for: "))
+index = sequential_search(numbers, target)
+if index == -1:
+    print(f"{target} not found in the list.")
+else:
+    print(f"{target} found at index {index}.")
+
+7.BINARY SEARCH
+def binary_search(arr, target):
+    left = 0
+    right = len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1 
+user_input = input("Enter a sorted list of numbers separated by spaces: ")
+numbers = [int(num) for num in user_input.split()]
+target = int(input("Enter the target number to search for: "))
+index = binary_search(numbers, target)
+if index == -1:
+    print(f"{target} not found in the list.")
+else:
+    print(f"{target} found at index {index}.")
+
+8.COMBINATION SUM 1
+def combination_sum(candidates, target):
+    result = []
+    def backtrack(start, combination, remaining_sum):
+        if remaining_sum == 0:
+            result.append(combination[:])
+            return
+        if remaining_sum < 0:
+            return
+        for i in range(start, len(candidates)):
+            combination.append(candidates[i])
+            backtrack(i, combination, remaining_sum - candidates[i])
+            combination.pop()
+    backtrack(0, [], target)
+    return result
+candidates = [2, 3, 6, 7]
+target = 7
+print(combination_sum(candidates, target))
+
+9.MERGE SORT
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left_half = arr[:mid]
+    right_half = arr[mid:]
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+    return merge(left_half, right_half)
+def merge(left, right):
+    result = []
+    left_index = 0
+    right_index = 0
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] <= right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+    while left_index < len(left):
+        result.append(left[left_index])
+        left_index += 1
+    
+    while right_index < len(right):
+        result.append(right[right_index])
+        right_index += 1
+    return result
+user_input = input("Enter a list of numbers separated by spaces: ")
+numbers = [int(num) for num in user_input.split()]
+sorted_numbers = merge_sort(numbers)
+print("Sorted list:", sorted_numbers)
