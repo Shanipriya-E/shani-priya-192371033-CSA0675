@@ -22,12 +22,31 @@ graph = {
 coloring = graph_coloring(graph)
 print(coloring)
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 2.MAX AND MIN
 A=[1,2,3,4,5,6]
 print(max(A))
 print(min(A))
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3.house robbery:
+def rob_circular(nums):
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+    def rob_linear(nums):
+        dp = [0] * (len(nums) + 1)
+        dp[1] = nums[0]
+        for i in range(2, len(nums) + 1):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i - 1])
+        return dp[-1]
+    case1 = rob_linear(nums[1:])
+    case2 = rob_linear(nums[:-1])
+    return max(case1, case2)
+print(rob_circular([2, 3, 2])) 
+print(rob_circular([1, 2, 3, 1]))
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 4.DIJKSTRA ALGORITHM
 from collections import defaultdict
@@ -66,7 +85,7 @@ if distance == float('inf'):
     print(f"No path found from {start} to {end}")
 else:
     print(f"The shortest distance from {start} to {end} is {distance}")
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 5.SELECTION SORT
 def selection_sort(arr):
     n = len(arr)
@@ -85,7 +104,7 @@ for i in range(num_elements):
     arr.append(element)
 sorted_arr = selection_sort(arr)
 print("Sorted list:", sorted_arr)
-W
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 6.SEQUENCIAL SEARCH
 def sequential_search(arr, target):
     for i in range(len(arr)):
@@ -100,7 +119,7 @@ if index == -1:
     print(f"{target} not found in the list.")
 else:
     print(f"{target} found at index {index}.")
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 7.BINARY SEARCH
 def binary_search(arr, target):
     left = 0
@@ -122,7 +141,7 @@ if index == -1:
     print(f"{target} not found in the list.")
 else:
     print(f"{target} found at index {index}.")
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 8.COMBINATION SUM 1
 def combination_sum(candidates, target):
     result = []
@@ -141,7 +160,7 @@ def combination_sum(candidates, target):
 candidates = [2, 3, 6, 7]
 target = 7
 print(combination_sum(candidates, target))
-
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 9.MERGE SORT
 def merge_sort(arr):
     if len(arr) <= 1:
@@ -175,3 +194,55 @@ user_input = input("Enter a list of numbers separated by spaces: ")
 numbers = [int(num) for num in user_input.split()]
 sorted_numbers = merge_sort(numbers)
 print("Sorted list:", sorted_numbers)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10.CLOSEST PAIR OF POINTS
+		for j in range(i+1, n):
+			if dist(P[i], P[j]) < min:
+				min = dist(P[i], P[j])
+	return min
+def min(x, y):
+	return x if x < y else y
+def stripClosest(strip, size, d):
+	min = d 
+	for i in range(size):
+		for j in range(i+1, size):
+			if (strip[j].y - strip[i].y) < min:
+				if dist(strip[i],strip[j]) < min:
+					min = dist(strip[i], strip[j])
+	return min
+def closestUtil(Px, Py, n):
+	if n <= 3:
+		return bruteForce(Px, n)
+	mid = n // 2
+	midPoint = Px[mid]
+	Pyl = [None] * mid 
+	Pyr = [None] * (n-mid) 
+	li = ri = 0 
+	for i in range(n):
+		if ((Py[i].x < midPoint.x or (Py[i].x == midPoint.x and Py[i].y < midPoint.y)) and li<mid):
+			Pyl[li] = Py[i]
+			li += 1
+		else:
+			Pyr[ri] = Py[i]
+			ri += 1
+	dl = closestUtil(Px, Pyl, mid)
+	dr = closestUtil(Px[mid:], Pyr, n-mid)
+	d = min(dl, dr)
+	strip = [None] * n
+	j = 0
+	for i in range(n):
+		if abs(Py[i].x - midPoint.x) < d:
+			strip[j] = Py[i]
+			j += 1
+	return stripClosest(strip, j, d)
+def closest(P, n):
+	Px = P
+	Py = P
+	Px.sort(key=lambda x:x.x)
+	Py.sort(key=lambda x:x.y)
+	return closestUtil(Px, Py, n)
+if _name_ == '_main_':
+	P = [Point(2, 3), Point(12, 30), Point(40, 50), Point(5, 1), Point(12, 10), Point(3, 4)]
+	n = len(P)
+	print("The smallest distance is", closest(P, n))
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
